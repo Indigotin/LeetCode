@@ -1,11 +1,13 @@
 package jianzhiOffer;
 
+
 /**
  * Created by Len on 2019-03-25
  */
 public class reConstructBinaryTree {
 
-    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+    //1
+    /*public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
 
         TreeNode root = getNode(pre,0,pre.length-1,in,-1,
                 0,in.length-1,new TreeNode(-1));
@@ -14,9 +16,9 @@ public class reConstructBinaryTree {
 
     private TreeNode getNode(int[] pre,int left1,int right1,int[] in,
                              int indexOfIn,int left2,int right2,TreeNode node){
-        if(left1<0 || left2<0){
+        //
+        if(left1<0 || left2<0)
             return null;
-        }
         TreeNode nextNode = null;
         if(left1 < right1 && left2 < right2){
             //根
@@ -47,6 +49,7 @@ public class reConstructBinaryTree {
 
             return node;
         }
+
         if(left1 == right1 || left2 == right2){
             if(left2 < indexOfIn){
                 nextNode = new TreeNode(pre[left1]);
@@ -110,7 +113,32 @@ public class reConstructBinaryTree {
                 return i;
         }
         return -1;
+    }*/
+
+    //2 优化
+    public TreeNode reConstructBinaryTree(int[] pre,int[] in) {
+
+        TreeNode root = reConstructBinaryTree(pre,0,pre.length-1,in,
+                0,in.length-1);
+        return root;
     }
+
+    private TreeNode reConstructBinaryTree(int[] pre,int startPre,int endPre,
+                                           int[] in,int startIn,int endIn){
+        if(startPre > endPre || startIn > endIn)
+            return null;
+
+        TreeNode node = new TreeNode(pre[startPre]);
+        for(int i=startIn;i<=endIn;i++){
+            if(pre[startPre] == in[i]){
+                node.left = reConstructBinaryTree(pre,startPre+1,startPre+i-startIn,in,startIn,i-1);
+                node.right = reConstructBinaryTree(pre,startPre+i-startIn+1,endPre,in,i+1,endIn);
+                break;
+            }
+        }
+        return node;
+    }
+
     public static void main(String[] args){
         reConstructBinaryTree test = new reConstructBinaryTree();
         int [] pre = {1,2,4,3,5,6};
